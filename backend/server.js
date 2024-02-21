@@ -5,9 +5,10 @@ const PORT = process.env.PORT || 4000;
 const v1Router = require('./routers/v1/index')
 const cookieParser  = require('cookie-parser')
 const mongoose = require('./configs/database')
-
+const middleware = require('./middlewares/UserAuth'); 
 // api version 
 app.use(cookieParser())
+app.use(middleware.authentication)
 app.use("/api/v1/" , v1Router)
 app.get('/', (req ,res) => { 
     return res.json({ 
