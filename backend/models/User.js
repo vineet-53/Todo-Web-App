@@ -24,6 +24,13 @@ const userSchema = mongoose.Schema( {
         type : String , 
         required : true, 
         trim : true,
+    }, 
+    token : {
+        type : String ,
+        
+    }, 
+    active : { 
+        type : Boolean, 
     }
 })
 
