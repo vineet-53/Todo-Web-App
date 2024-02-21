@@ -9,7 +9,6 @@ exports.createUserSession = async( req ,res )=> {
         }
         // find the user 
         const user = await User.findOne({email});
-
         // make token payload
         const tokenPayload ={ 
             userId : user._id, 
@@ -67,10 +66,7 @@ exports.login = async( req ,res) => {
 
 exports.logout = async( req ,res) => { 
     try { 
-        return res.status(200).json({  
-            success : true , 
-            message  : "User Logout Successfully "
-        })
+        next()
     }catch(err) { 
         return res.status(400).json({ 
             success  : false, 
@@ -79,6 +75,32 @@ exports.logout = async( req ,res) => {
     }
 }
 
+exports.destroyUserSession = async(req, res)=> { 
+    try { 
+        const {userId} = req.user; 
+        // find user and udpate active status 
+        const user  = await User.findOneAndUpdate({_id : userId} , 
+            { 
+                $set : { 
+                    active : false, 
+                }, 
+                $unset : { 
+                    token : 1,
+                }
+            }, {new : true}); 
+        res.status(200).json({ 
+            success : true, 
+            message : "Destroyed User Session", 
+            user : user,
+        })
+    }catch(err) { 
+        return res.status(400).json({ 
+            success : false, 
+            message : "User Session Destoryed Success", 
+
+        })
+    }
+}
 exports.singup = async( req ,res) => { 
 
     try { 
