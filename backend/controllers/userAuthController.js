@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const utils = require('../utils/index')
 const jwt = require('jsonwebtoken')
+const Otp = require('../models/Otp')
 exports.createUserSession = async( req ,res )=> { 
     try {   
         const {email} =req.body; 
@@ -105,8 +106,8 @@ exports.singup = async( req ,res) => {
 
     try { 
         // get the data
-        const  {firstName ,lastName , email , password ,confirmPassword} = req.body; 
-        if(!firstName || !lastName || !email || !password || !confirmPassword) { 
+        const  {firstName ,lastName , email , password ,confirmPassword ,  otp} = req.body; 
+        if(!firstName || !lastName || !email || !password || !confirmPassword || !otp) { 
             throw new Error("Please Enter All Details"); 
         }
         if(password != confirmPassword)  { 
@@ -116,6 +117,13 @@ exports.singup = async( req ,res) => {
         const isUserExisted = await User.findOne({email})
         if(isUserExisted) { 
             throw new Error("User Already Existed"); 
+        }
+        // find the latest otp with the email 
+        const latestOtp = await Otp.find({email}).sort({createdAt : -1}).limit(1)
+        // compare otp
+        if(latestOtp.otp !== otp) { 
+            throw new Error("Otp Not Matched"); 
+
         }
         // hash the user password 
         const hashPassword = await utils.encrypt(password , 10); 
