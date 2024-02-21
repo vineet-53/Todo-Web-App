@@ -89,7 +89,10 @@ exports.destroyUserSession = async(req, res)=> {
                     token : 1,
                 }
             }, {new : true}); 
-        res.status(200).json({ 
+        // delete cookies and header tokens
+        res.headers.authorization = "", 
+        res.clearCookie('sessionToken'); 
+       return res.status(200).json({ 
             success : true, 
             message : "Destroyed User Session", 
             user : user,
@@ -102,7 +105,7 @@ exports.destroyUserSession = async(req, res)=> {
         })
     }
 }
-exports.singup = async( req ,res) => { 
+exports.signup = async( req ,res) => { 
 
     try { 
         // get the data
