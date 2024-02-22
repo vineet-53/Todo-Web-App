@@ -8,12 +8,13 @@ const otpSchema = mongoose.Schema({
     email : { 
         type : String,  
         required : true ,
-
     },
     createdAt : { 
         type : Date , 
         default  : Date.now()
-    }
+    }, 
+} , { 
+    expires : 5 * 60,
 })
 const sendOTP = async (email , otp) => { 
     try { 
@@ -29,4 +30,4 @@ otpSchema.pre("save" , function(next) {
     // run next
     next()
 })
-module.exports = mongoose.model("Otp" , otpSchema) ;
+module.exports = mongoose.model("OTP" , otpSchema) ;

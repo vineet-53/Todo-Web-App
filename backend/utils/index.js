@@ -9,7 +9,7 @@ exports.encrypt = async (textTohash , saltRounds ) => {
 }
 exports.compare  = async (textToCompare , hashText) => { 
     try { 
-        const result = await bcrypt.compare(someOtherPlaintextPassword, hash);
+        const result = await bcrypt.compare(textToCompare, hashText);
         if(!result) { 
             throw new Error("Password Not Matched"); 
         }

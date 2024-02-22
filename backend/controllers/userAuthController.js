@@ -3,177 +3,156 @@ const utils = require('../utils/index')
 const jwt = require('jsonwebtoken')
 const OTP = require('../models/OTP')
 const OTPGenerator = require('../utils/OTP/OTPGenerator')
-exports.createUserSession = async( req ,res )=> { 
-    try {   
-        const {email} =req.body; 
-        if(!email) { 
-            throw new Error("Email Not Found "); 
-        }
-        // find the user 
-        const user = await User.findOne({email});
-        // make token payload
-        const tokenPayload ={ 
-            userId : user._id, 
-            email  : user.email , 
-        }
-        const token = jwt.sign(tokenPayload , process.env.JWT_SECRET )
-        // save token to headers or cookies
-        if(res.cookies.sessionToken) { 
-            throw new Error("Session Token Already Existed");
-        }
-        req.headers.authorization = `Bearer ${token}`
-        res.cookie('sessionToken', token , { maxAge: 900000, httpOnly: true });
-        // udpate the user active session
-        const updatedUserActive = await User.findOneAndUpdate({email} ,  {
-            $set : { 
-                active : true, 
-                token  :token,
-            }
-        }, {new : true})
-        return res.status(200).json({ 
-            success : true, 
-            message : "User Session Created Successfully", 
-            user : updatedUserActive,
-        })
-    }catch(err) { 
-        return res.status(500).json({ 
-            success : false, 
-            message : "Error Creating User Session"
-        })
-    }
-}
-exports.login = async( req ,res) => { 
-    try { 
-        const {email , password } = req.body; 
-        if(!email || !password) { 
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
             throw new Error("Please Provide All Details");
         }
         //  verify user
-        const isUserVerified = await User.findOne({email})
-        if(!isUserVerified){  
+        const isUserVerified = await User.findOne({ email })
+        if (!isUserVerified) {
             throw new Error("User not Exist");
         }
         // verfiy user password 
-        await utils.compare(password,isUserVerified.password); 
-
+        let user = isUserVerified;
+        await utils.compare(password, user.password);
         // create a session for user
-        next()
-    }catch(err) { 
-        return res.status(400).json({ 
-            success  : false, 
-            message : err.message
-        })
-    }
-}
-
-exports.logout = async( req ,res) => { 
-    try { 
-        next()
-    }catch(err) { 
-        return res.status(400).json({ 
-            success  : false, 
-            message : err.message
-        })
-    }
-}
-
-exports.destroyUserSession = async(req, res)=> { 
-    try { 
-        const {userId} = req.user; 
-        // find user and udpate active status 
-        const user  = await User.findOneAndUpdate({_id : userId} , 
-            { 
-                $set : { 
-                    active : false, 
-                }, 
-                $unset : { 
-                    token : 1,
-                }
-            }, {new : true}); 
-        // delete cookies and header tokens
-        res.headers.authorization = "", 
-        res.clearCookie('sessionToken'); 
-       return res.status(200).json({ 
-            success : true, 
-            message : "Destroyed User Session", 
-            user : user,
-        })
-    }catch(err) { 
-        return res.status(400).json({ 
-            success : false, 
-            message : "User Session Destoryed Success", 
-
-        })
-    }
-}
-exports.signup = async( req ,res) => { 
-
-    try { 
-        // get the data
-        const  {firstName ,lastName , email , password ,confirmPassword ,  otp} = req.body; 
-        if(!firstName || !lastName || !email || !password || !confirmPassword || !otp) { 
-            throw new Error("Please Enter All Details"); 
+        const tokenPayload = {
+            userId: user._id,
+            email: user.email,
         }
-        if(password != confirmPassword)  { 
-            throw new Error("Password not matched"); 
+        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET)
+        // save token to headers or cookies
+        if (res?.cookies?.sessionToken) {
+            throw new Error("Session Token Already Existed");
+        }
+        // req.headers.authorization = `Bearer ${token}`
+        res.cookie('sessionToken', token, { maxAge: 5 * 3600, httpOnly: true });
+        // udpate the user active session
+        await User.findOneAndUpdate({ email }, {
+            $set: {
+                active: true,
+                token: token,
+            }
+        }, { new: true })
+        return res.status(200).json({
+            success: true,
+            message: "User Session Created Successfully",
+            user
+        })
+    } catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+
+exports.logout = async (req, res) => {
+    try {
+        const { userId } = req.user;
+        // find user and udpate active status 
+        // update user active state and token
+        await User.findOneAndUpdate({ _id: userId },
+            {
+                $set: {
+                    active: false,
+                },
+                $unset: {
+                    token: 1,
+                }
+            }, { new: true });
+        // delete cookies and header tokens
+        res.headers.authorization = "";
+        res.clearCookie('sessionToken');
+        return res.status(200).json({
+            success: true,
+            message: "Destroyed User Session",
+        })
+    } catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+exports.signup = async (req, res) => {
+
+    try {
+        // get the data
+        const { firstName, lastName, email, password, confirmPassword, otp } = req.body;
+        if (!firstName || !lastName || !email || !password || !confirmPassword || !otp) {
+            throw new Error("Please Enter All Details");
+        }
+        if (password != confirmPassword) {
+            throw new Error("Password not matched");
         }
         // find the user with user email 
-        const isUserExisted = await User.findOne({email})
-        if(isUserExisted) { 
-            throw new Error("User Already Existed"); 
+        const isUserExisted = await User.findOne({ email })
+        if (isUserExisted) {
+            throw new Error("User Already Existed");
         }
         // find the latest otp with the email 
-        const latestOtp = await Otp.find({email}).sort({createdAt : -1}).limit(1)
+        const latestOtp = await OTP.findOne({ email }).sort({ createdAt: -1 }).limit(1)
+        if (!latestOtp) {
+            throw new Error("OTP Not exist")
+        }
+        if (latestOtp.otp == otp) {
+            console.log("OTP Matched")
+        }
         // compare otp
-        if(latestOtp.otp !== otp) { 
-            throw new Error("Otp Not Matched"); 
+        if (latestOtp.otp !== otp) {
+            throw new Error("Otp Not Matched");
         }
         // hash the user password 
-        const hashPassword = await utils.encrypt(password , 10); 
+        const hashPassword = await utils.encrypt(password, 10);
         // create user account 
-        const newUser = await User.create({ 
-            firstName,  
-            lastName, 
-            email , 
-            password  :hashPassword
+        const newUser = await User.create({
+            firstName,
+            lastName,
+            email,
+            password: hashPassword
         })
-        console.log("NEW USER CREATED"); 
-        return res.status(200).json({  
-            success : true , 
-            message  : "User Signup Successfully ",
-            user : newUser,
+        console.log("NEW USER CREATED");
+        return res.status(200).json({
+            success: true,
+            message: "User Signup Successfully ",
+            user: newUser,
         })
-    }catch(err) { 
-        return res.status(400).json({ 
-            success  : false, 
-            message : err.message
+    } catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.message
         })
     }
 }
-exports.sendOTP = async (req ,res) => { 
-    try { 
+exports.sendOTP = async (req, res) => {
+    try {
         // validate input
-        const {email} = req.body; 
-        if(!email ){ 
-            throw new Error("Please Send Email ...."); 
+        const { email } = req.body;
+        if (!email) {
+            throw new Error("Please Send Email ....");
         }
         // create otp 
         const otp = await OTPGenerator.generate(4)
         // create otp data base 
-        const otpDoc = await OTP.create({ 
-            email , 
+        const otpDoc = await OTP.create({
+            email,
             otp
         })
         // 
-        return res.status(400).json({ 
-            success  : true, 
-            message : "OTP Sended Successfully", 
-            otpDoc ,
+        return res.status(400).json({
+            success: true,
+            message: "OTP Sended Successfully",
+            otpDoc,
         })
-    }catch(err) { 
-        return res.status(400).json({ 
-            success  : false, 
-            message : err.message,  
+    } catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.message,
         })
     }
 }

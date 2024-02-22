@@ -4,15 +4,7 @@ exports.createTodo = async (req ,res)=> {
     try { 
         const {todo , category , date } = req.body; 
         if(!todo || !category || !date) { 
-            return res.status(404).json({ 
-                success : false, 
-                message : "Please Enter All Details"
-            })
-        }
-        // verify user cookie 
-        const user = req.user
-        if(!user) { 
-            throw new Error("User Not Exist")
+            throw new Error("Please Provide All Details")
         }
         // create todo 
         const todoDoc = Todo.create({ 

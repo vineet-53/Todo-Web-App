@@ -12,10 +12,7 @@ exports.authentication = async(req ,res , next) => {
         req.user = user;
         next()
     }catch(err){  
-        return res.status(401).json({ 
-            sucess : false, 
-            message : "User Unauthorized", 
-        })
+        res.redirect('/login')
     }
 }
 

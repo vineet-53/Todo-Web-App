@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-
-
 const todoSchema = mongoose.Schema({ 
     todo :  { 
         type : String , 
@@ -8,7 +6,6 @@ const todoSchema = mongoose.Schema({
     }, 
     category : { 
         type : String ,
-        enum : ["School" , "Work" , "Personal"],
         required : true, 
     },
     date : { 
@@ -18,7 +15,6 @@ const todoSchema = mongoose.Schema({
     createdAt : { 
         type :Date , 
         default : Date.now(), 
-
     }
 })
 module.exports =  mongoose.model("Todo" , todoSchema); 
