@@ -17,7 +17,7 @@ exports.createTodo = async (req ,res)=> {
         }
         // create todo 
         const todoDoc = await Todo.create({ 
-            todo , category , date , 
+            todo , category , date , user : req.user.userId
         })
         // return response
         return res.status(200).json( {

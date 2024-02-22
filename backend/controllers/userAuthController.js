@@ -3,6 +3,7 @@ const utils = require('../utils/index')
 const jwt = require('jsonwebtoken')
 const OTP = require('../models/OTP')
 const OTPGenerator = require('../utils/OTP/OTPGenerator')
+const Todo = require('../models/Todo')
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -150,6 +151,26 @@ exports.sendOTP = async (req, res) => {
             otpDoc,
         })
     } catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.message,
+        })
+    }
+}
+
+exports.deleteAccount = async (req ,res)=> { 
+    try { 
+        const {userId , email} = req.user; 
+        // find the user 
+        const deletedUser = await User.findByIdAndDelete(userId); 
+        // delete all the todos with that id 
+        const deletedTodos = await Todo.deleteMany({user : userId})
+        console.log(deletedTodos)
+        return res.status(400).json({
+            success: true,
+            message: "Deleted Account Successfully",
+        })
+    }catch(err) { 
         return res.status(400).json({
             success: false,
             message: err.message,
