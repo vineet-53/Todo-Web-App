@@ -1,5 +1,7 @@
 const express = require('express')
-require('dotenv').config()
+require('dotenv').config({ 
+    path : '../.env'
+})
 const app = express()  ;
 const PORT = process.env.PORT || 4000;
 const v1Router = require('./routers/v1/index')
@@ -8,7 +10,7 @@ const mongoose = require('./configs/database')
 const middleware = require('./middlewares/UserAuth'); 
 // api version 
 app.use(cookieParser())
-app.use(middleware.authentication)
+app.use(middleware.authentication )
 app.use("/api/v1/" , v1Router)
 app.get('/', (req ,res) => { 
     return res.json({ 
