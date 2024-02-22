@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router(); 
 const {createTodo ,deletedTodo, updateTodo} = require('../../controllers/todoController')
-router.post("/create-todo" , createTodo);
-router.delete('/delete-todo/:todoId', deletedTodo )
-router.put('/update-todo/:todoId' , updateTodo)
+const middleware = require('../../middlewares/UserAuth')
+router.post("/create-todo"  , middleware.authentication , createTodo);
+router.delete('/delete-todo/:todoId' , middleware.authentication , deletedTodo )
+router.put('/update-todo/:todoId'  , middleware.authentication , updateTodo)
 router.get('/' , (req ,res)=> { 
     return res.json({ 
         message : "Todo routes"
