@@ -16,7 +16,7 @@ exports.createTodo = async (req ,res)=> {
             throw new Error("Todo Already Existed....")
         }
         // create todo 
-        const todoDoc = Todo.create({ 
+        const todoDoc = await Todo.create({ 
             todo , category , date , 
         })
         // return response

@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
             userId: user._id,
             email: user.email,
         }
-        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET)
+        const token = await jwt.sign(tokenPayload, process.env.JWT_SECRET)
         // save token to headers or cookies
         if (res?.cookies?.sessionToken) {
             throw new Error("Session Token Already Existed");
@@ -65,7 +65,7 @@ exports.logout = async (req, res) => {
                 }
             }, { new: true });
         // delete cookies and header tokens
-        res.headers.authorization = "";
+        // req.headers.authorization = "";
         res.clearCookie('sessionToken');
         return res.status(200).json({
             success: true,
