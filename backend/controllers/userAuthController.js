@@ -1,7 +1,8 @@
 const User = require('../models/User')
 const utils = require('../utils/index')
 const jwt = require('jsonwebtoken')
-const Otp = require('../models/Otp')
+const Otp = require('../models/OTP')
+const OTP = require('../models/OTP')
 exports.createUserSession = async( req ,res )=> { 
     try {   
         const {email} =req.body; 
@@ -126,7 +127,6 @@ exports.signup = async( req ,res) => {
         // compare otp
         if(latestOtp.otp !== otp) { 
             throw new Error("Otp Not Matched"); 
-
         }
         // hash the user password 
         const hashPassword = await utils.encrypt(password , 10); 
@@ -142,6 +142,31 @@ exports.signup = async( req ,res) => {
             success : true , 
             message  : "User Signup Successfully ",
             user : newUser,
+        })
+    }catch(err) { 
+        return res.status(400).json({ 
+            success  : false, 
+            message : err.message
+        })
+    }
+}
+exports.sendOTP = async (req ,res) => { 
+    try { 
+        // validate input
+        const {email } =  req.body; 
+        if(!email ){ 
+            throw new Error("Please Send Email ...."); 
+
+        }
+        // create otp data base 
+        const otpDoc = await OTP.create({ 
+            email
+        })
+        // 
+        return res.status(400).json({ 
+            success  : true, 
+            message : "OTP Sended Successfully", 
+            otpDoc ,
         })
     }catch(err) { 
         return res.status(400).json({ 
