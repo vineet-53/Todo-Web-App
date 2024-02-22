@@ -2,9 +2,9 @@ const otpGenerator = require('otp-generator')
 
 
 
-exports.generate = async() => { 
+exports.generate = async(OTP_LENGTH) => { 
     try { 
-        const otp = await otpGenerator.generate(4, {
+        const otp = await otpGenerator.generate(OTP_LENGTH, {
             digits : true, 
             lowerCaseAlphabets : false ,
             upperCaseAlphabets : false, 

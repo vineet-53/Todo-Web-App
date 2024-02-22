@@ -1,8 +1,8 @@
 const User = require('../models/User')
 const utils = require('../utils/index')
 const jwt = require('jsonwebtoken')
-const Otp = require('../models/OTP')
 const OTP = require('../models/OTP')
+const OTPGenerator = require('../utils/OTP/OTPGenerator')
 exports.createUserSession = async( req ,res )=> { 
     try {   
         const {email} =req.body; 
@@ -153,14 +153,16 @@ exports.signup = async( req ,res) => {
 exports.sendOTP = async (req ,res) => { 
     try { 
         // validate input
-        const {email } =  req.body; 
+        const {email} = req.body; 
         if(!email ){ 
             throw new Error("Please Send Email ...."); 
-
         }
+        // create otp 
+        const otp = await OTPGenerator.generate(4)
         // create otp data base 
         const otpDoc = await OTP.create({ 
-            email
+            email , 
+            otp
         })
         // 
         return res.status(400).json({ 
@@ -171,7 +173,7 @@ exports.sendOTP = async (req ,res) => {
     }catch(err) { 
         return res.status(400).json({ 
             success  : false, 
-            message : err.message
+            message : err.message,  
         })
     }
 }

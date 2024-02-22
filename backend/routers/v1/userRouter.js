@@ -4,7 +4,7 @@ const {signup , sendOTP , login ,destroyUserSession , createUserSession , logout
 router.post('/signup' , signup )
 router.post('/login' , login, createUserSession); 
 router.get('/logout', logout , destroyUserSession);
-router.post('/sendOTP' , sendOTP);
+router.post('/send-otp' , sendOTP);
 router.get('/' , (req ,res)=> { 
     res.json({ 
         message : "user routes"
