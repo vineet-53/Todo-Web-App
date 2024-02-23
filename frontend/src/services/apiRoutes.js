@@ -1,4 +1,4 @@
-const BASE_URL = BASE_URL;
+const BASE_URL = "";
 export const userEndpoints = {
     LOGIN : BASE_URL + "", 
     SIGNUP:BASE_URL + "" , 

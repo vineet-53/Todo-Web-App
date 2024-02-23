@@ -3,7 +3,11 @@ import { useForm } from "react-hook-form"
 import { InputFieldContainer, InputFieldStyles } from '../../../styles/FormStyles'
 import SubmitButton from '../../common/SubmitButton'
 import ErrorInputField from '../../common/ErrorInputField'
+import { useDispatch } from 'react-redux'
+import { signup } from '../../../services/authService'
 function SignupForm({setFormFilled}) {
+    const dispatch = useDispatch()
+    
   const { register, handleSubmit, setError ,getValues,formState: { errors } } = useForm(
     {
       defaultValues: {
@@ -16,7 +20,7 @@ function SignupForm({setFormFilled}) {
     }
   )
 
-  const onSubmit = (data) => {
+  const onSubmit =async (data) => {
     const {password , confirmPassword}= data; 
     if(password !== confirmPassword) { 
         setError("root" , { 
@@ -27,9 +31,10 @@ function SignupForm({setFormFilled}) {
     }
     // fetch the data from backend
     console.log(data)
+    // fetch api response
+    const result = await dispatch(signup(data))
     // send otp to user if response is success then setformfilled
-
-    setFormFilled(true)
+    if(result) setFormFilled(true)
   }
   return (
     <div className='flex justify-center sm:px-0 px-4 sm:items-center flex-col gap-6 h-[100vh]  '>
