@@ -12,18 +12,19 @@ export const sendOTP = (data) => async (dispatch) => {
         const response = await axios.post(SENDOTP_URL , {email : data.email})
         // if success 
         console.log(response)
-        if(!response.response.success){ 
-            toast.error(response?.response?.message)
+        if(!response?.data?.success){ 
+            toast.dismiss(toastId)
+            return response?.data?.success
         }
-        await dispatch(setUser(...data))
+        await dispatch(setUser({...data}))
         // set user data to localstorage
-        toast.success(response?.response?.message)
+        toast.success(response?.data?.message)
+        return response?.data?.success
     }catch(err) { 
         console.error(err ,"\n Error Message : ", err.message); 
         toast.error(err.message)
     }
     // end loading
-    
     toast.dismiss(toastId)
 }
 

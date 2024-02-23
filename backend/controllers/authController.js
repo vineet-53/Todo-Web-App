@@ -145,7 +145,7 @@ exports.sendOTP = async (req, res) => {
             otp
         })
         // 
-        return res.status(400).json({
+        return res.status(200).json({
             success: true,
             message: "OTP Sended Successfully",
             otpDoc,
@@ -166,7 +166,7 @@ exports.deleteAccount = async (req ,res)=> {
         // delete all the todos with that id 
         const deletedTodos = await Todo.deleteMany({user : userId})
         console.log(deletedTodos)
-        return res.status(400).json({
+        return res.status(200).json({
             success: true,
             message: "Deleted Account Successfully",
         })

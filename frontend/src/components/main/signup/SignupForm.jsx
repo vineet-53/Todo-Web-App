@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form"
 import { InputFieldContainer, InputFieldStyles } from '../../../styles/FormStyles'
 import SubmitButton from '../../common/SubmitButton'
 import ErrorInputField from '../../common/ErrorInputField'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { sendOTP, signup } from '../../../services/authService'
 function SignupForm({setFormFilled}) {
     const dispatch = useDispatch()
@@ -19,7 +19,6 @@ function SignupForm({setFormFilled}) {
       }
     }
   )
-
   const onSubmit =async (data) => {
     const {password , confirmPassword}= data; 
     if(password !== confirmPassword) { 
@@ -33,7 +32,7 @@ function SignupForm({setFormFilled}) {
     console.log(data)
     
     // send otp to user if response is success then setformfilled
-    const result =  await dispatch(sendOTP(data.email))
+    const result =  await dispatch(sendOTP(data))
     
     if(result) setFormFilled(true)
   }

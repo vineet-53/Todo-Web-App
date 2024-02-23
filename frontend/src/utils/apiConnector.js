@@ -1,11 +1,11 @@
 
 import axios from "axios"
-export const apiConnector = async (method, url, body, headers) => {
+export const apiConnector = async (method, url, body = {}, headers) => {
     try {
         const response = await axios({ 
             method,
             url,
-            body: body ? body : null,
+            body,
             headers: headers ? headers : {},
         });
         return response;
