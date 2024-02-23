@@ -101,9 +101,6 @@ exports.signup = async (req, res) => {
         if (!latestOtp) {
             throw new Error("OTP Not exist")
         }
-        if (latestOtp.otp == otp) {
-            console.log("OTP Matched")
-        }
         // compare otp
         if (latestOtp.otp !== otp) {
             throw new Error("Otp Not Matched");

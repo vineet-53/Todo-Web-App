@@ -4,6 +4,7 @@ import Todo from './pages/Todo'
 import Login from './pages/Login'
 import {Route , Routes} from "react-router-dom"
 import PrivateRoute from './authentication/PrivateRoute'
+import OpenRoute from './authentication/OpenRoute'
 function App() {
   return (
     <>
@@ -11,10 +12,9 @@ function App() {
         <Route path='/' element={<PrivateRoute> 
           <Todo />
         </PrivateRoute>}/>
-        <Route path='/signup' element={<Signup/>} />
-        <Route path='/login' element={<Login/>} />
+        <Route path='/signup' element={<OpenRoute><Signup/></OpenRoute>} />
+        <Route path='/login' element={<OpenRoute><Login/></OpenRoute>} />
       </Routes>
-    
     </>
   )
 }

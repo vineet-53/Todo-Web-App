@@ -28,13 +28,12 @@ export const sendOTP = (data) => async (dispatch) => {
 export const signup = async (user , otp , navigate) => { 
     const toastId = toast.loading("Verifying OTP....")
     try { 
-        console.log("USER ----> " , user); 
         const response = await axios.post(SIGNUP_URL , {...user , otp})
         if(!response?.data?.success) { 
             throw new Error(response?.data?.message)
         }
         // set user to local storage
-        localStorage.setItem("user" , JSON.stringify(user))
+        // localStorage.setItem("user" , JSON.stringify(user))
         toast.success(response?.data?.message)
         navigate('/login')
     }catch(err) { 
@@ -43,4 +42,28 @@ export const signup = async (user , otp , navigate) => {
     }
     toast.dismiss(toastId)
     
+}
+
+export const login = async (email , password , navigate) => { 
+    const toastId =toast.loading("Logging In....")
+    try { 
+        const response = await axios.post(LOGIN_URL , {email , password})
+        if(!response?.data?.success) { 
+            throw new Error(response?.data?.message)
+        }
+        const { firstName , lastName , active ,} = response?.data?.user
+        // set user to local storage
+        localStorage.setItem("user" , JSON.stringify({ 
+            email : response?.data?.user.email , firstName, lastName ,active
+        }))
+        // set token 
+        localStorage.setItem("sessionToken" , JSON.stringify(response?.data?.user?.token));
+        console.log(response)
+        toast.success(response?.data?.message)
+        navigate('/')
+    }catch(err) { 
+        console.error(err ,"\n Error Message : ", err.message); 
+        toast.error(err.message)
+    }
+    toast.dismiss(toastId)
 }

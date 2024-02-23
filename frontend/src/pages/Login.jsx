@@ -3,16 +3,21 @@ import SubmitButton from '../components/common/SubmitButton'
 import { useForm } from 'react-hook-form'
 import ErrorInputField from '../components/common/ErrorInputField'
 import { InputFieldContainer, InputFieldStyles } from '../styles/FormStyles'
+import { useDispatch } from 'react-redux'
+import { login } from '../services/authService'
+import { useNavigate } from 'react-router-dom'
+
 function Login() {
+  const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors } } = useForm({
+
     defaultValues: {
       email: "",
       password: "",
     }
   })
   const onSubmit = data => {
-    // console.log(data)
-    //
+    login(data.email , data.password , navigate);
   }
   return (
     <section className='flex flex-col justify-center lg:px-0 px-6 sm:items-center h-[100vh]'>
