@@ -1,6 +1,17 @@
-import React from 'react'
-
+import React, { useState } from 'react'
+import {useForm} from "react-hook-form"
+import Select from "react-select"
+const options = [
+  { category: 'School', label: 'School' },
+  { category: 'Work', label: 'Work' },
+  { category: 'Personal', label: 'Personal' },
+];
 function Todo() {
+  const {register , handleSubmit  , formState: {errors}} = useForm()
+  const onSubmit = data => { 
+    console.log(data)
+  }
+  const[category , setCategory] = useState("Select Options");
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>

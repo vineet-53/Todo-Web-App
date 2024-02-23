@@ -1,15 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from "react-hook-form"
 import ErrorInputField from "../components/common/ErrorInputField"
-import { InputFieldContainer, InputFieldStyles, SubmitButton } from "../styles/FormStyles"
-const options = [
-  { category: 'School', label: 'School' },
-  { category: 'Work', label: 'Work' },
-  { category: 'Personal', label: 'Personal' },
-];
+import { InputFieldContainer, InputFieldStyles } from "../styles/FormStyles"
+import SubmitButton from '../components/common/SubmitButton'
+
 function Signup() {
-  const [category, setCategory] = useState("Select Options")
-  const { register, setValue, handleSubmit, formState: { errors } } = useForm(
+  const { register, handleSubmit, formState: { errors } } = useForm(
     {
       defaultValues: {
         firstName: "",
@@ -58,7 +54,7 @@ function Signup() {
           <input type="password" id='confirmPassword' className={InputFieldStyles} placeholder='Enter confirm Password' {...register("confirmPassword", { required: "Please Enter Confirm Password" })} />
           {errors?.confirmPassword && <ErrorInputField>{errors?.confirmPassword.message}</ErrorInputField>}
         </div>
-        <button className={SubmitButton}>Submit</button>
+        <SubmitButton />
       </form>
     </div>
   )
