@@ -8,26 +8,39 @@ export const sendOTP = (data) => async (dispatch) => {
     // show loading 
     const toastId = toast.loading("Sending OTP to mail....")
     try { 
-        // const response = await apiConnector("POST" , SENDOTP , {email : data.email} )
         const response = await axios.post(SENDOTP_URL , {email : data.email})
         // if success 
         console.log(response)
-        if(!response?.data?.success){ 
-            toast.dismiss(toastId)
-            return response?.data?.success
+        if(response?.data?.success){ 
+            await dispatch(setUser({...data}))
+            // set user data to localstorage
+            toast.success(response?.data?.message)
         }
-        await dispatch(setUser({...data}))
-        // set user data to localstorage
-        toast.success(response?.data?.message)
+        toast.dismiss(toastId); 
         return response?.data?.success
     }catch(err) { 
         console.error(err ,"\n Error Message : ", err.message); 
         toast.error(err.message)
     }
-    // end loading
     toast.dismiss(toastId)
 }
 
-export const signup = async () => { 
+export const signup = async (user , otp , navigate) => { 
+    const toastId = toast.loading("Verifying OTP....")
+    try { 
+        console.log("USER ----> " , user); 
+        const response = await axios.post(SIGNUP_URL , {...user , otp})
+        if(!response?.data?.success) { 
+            throw new Error(response?.data?.message)
+        }
+        // set user to local storage
+        localStorage.setItem("user" , JSON.stringify(user))
+        toast.success(response?.data?.message)
+        navigate('/login')
+    }catch(err) { 
+        console.error(err ,"\n Error Message : ", err.message); 
+        toast.error(err.message)
+    }
+    toast.dismiss(toastId)
     
 }
