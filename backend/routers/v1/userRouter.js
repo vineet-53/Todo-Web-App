@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router(); 
-const {signup , sendOTP , login , logout , deleteAccount} = require('../../controllers/userAuthController');
+const {signup , sendOTP , login , logout , deleteAccount} = require('../../controllers/authController');
 const middleware = require('../../middlewares/userAuth');
 router.post('/signup' , signup )
 router.post('/login' , login); 

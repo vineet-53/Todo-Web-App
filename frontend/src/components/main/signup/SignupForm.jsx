@@ -4,7 +4,7 @@ import { InputFieldContainer, InputFieldStyles } from '../../../styles/FormStyle
 import SubmitButton from '../../common/SubmitButton'
 import ErrorInputField from '../../common/ErrorInputField'
 import { useDispatch } from 'react-redux'
-import { signup } from '../../../services/authService'
+import { sendOTP, signup } from '../../../services/authService'
 function SignupForm({setFormFilled}) {
     const dispatch = useDispatch()
     
@@ -31,9 +31,10 @@ function SignupForm({setFormFilled}) {
     }
     // fetch the data from backend
     console.log(data)
-    // fetch api response
-    const result = await dispatch(signup(data))
+    
     // send otp to user if response is success then setformfilled
+    const result =  await dispatch(sendOTP(data.email))
+    
     if(result) setFormFilled(true)
   }
   return (

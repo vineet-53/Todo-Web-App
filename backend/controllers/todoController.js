@@ -38,7 +38,7 @@ exports.createTodo = async (req ,res)=> {
 exports.deletedTodo = async (req ,res) => { 
     try {
         // fetch the id from params 
-        const {todoId} = req.params; 
+        const {todoId } = req.body; 
         if(!req.user ) { 
             throw new Error("Unauthorized To do this operation");
         }
@@ -68,8 +68,7 @@ exports.deletedTodo = async (req ,res) => {
 exports.updateTodo = async (req ,res) => { 
     // update the todo 
     try {
-            
-        const {todoId} = req.params; 
+        const {todoId} = req.body; 
         if(!req.user ) { 
             throw new Error("Unauthorized To do this operation");
         }
