@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "start-backend": "cd backend && npm run dev",
+    "start-frontend": "cd frontend && npm run dev",
+    "start": "concurrently \"npm run start-frontend\" \"npm run start-backend\""
+  },
+  "name": "todo-full-stack-app",
+  "description": "[Previous Todo App](https://github.com/vineet-53/todo-app)  * created using express , mongo , views etc...",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

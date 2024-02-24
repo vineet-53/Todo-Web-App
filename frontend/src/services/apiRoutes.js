@@ -9,7 +9,9 @@ export const userEndpoints = {
 }
 
 export const todoEndpoints = { 
-    CREATE_TODO : BASE_URL + API_VERSION + "/todos/create-todo", 
-    DELETE_TODO : BASE_URL + API_VERSION + "/todos/delete-todo", 
-    UPDATE_TODO :BASE_URL + API_VERSION + "/todos/update-todo", 
+    CREATE_TODO_URL : BASE_URL + API_VERSION + "/todos/create-todo", 
+    DELETE_TODO_URL : BASE_URL + API_VERSION + "/todos/delete-todo", 
+    UPDATE_TODO_URL :BASE_URL + API_VERSION + "/todos/update-todo", 
+    GET_ALL_TODOS_URL :BASE_URL + API_VERSION + "/todos/get-all-todos", 
+
 }

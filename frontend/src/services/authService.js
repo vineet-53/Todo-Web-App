@@ -60,7 +60,6 @@ export const login = async (email , password , navigate) => {
         localStorage.setItem("sessionToken" , JSON.stringify(response?.data?.user?.token));
         console.log(response)
         toast.success(response?.data?.message)
-        navigate('/')
     }catch(err) { 
         console.error(err ,"\n Error Message : ", err.message); 
         toast.error(err.message)

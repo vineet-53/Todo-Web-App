@@ -17,7 +17,7 @@ function Login() {
     }
   })
   const onSubmit = data => {
-    login(data.email , data.password , navigate);
+     login(data.email , data.password );
   }
   return (
     <section className='flex flex-col justify-center lg:px-0 px-6 sm:items-center h-[100vh]'>

@@ -108,3 +108,18 @@ exports.updateTodo = async (req ,res) => {
         })
     }
 }
+exports.getAllTodos = async (req ,res) => { 
+    try { 
+        const allTodos = await Todo.find({}); 
+        return res.status(200).json( {
+            success : true, 
+            message : "All Todos" , 
+            todos : allTodos,
+        })
+    }catch(err) { 
+        return res.status(400).json({ 
+            success : false, 
+            message : err.message
+        })
+    }
+}
