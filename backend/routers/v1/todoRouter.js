@@ -4,7 +4,7 @@ const {createTodo ,deletedTodo, updateTodo, getAllTodos} = require('../../contro
 const middleware = require('../../middlewares/userAuth')
 router.post("/create-todo"  , middleware.authentication , createTodo);
 router.delete('/delete-todo' , middleware.authentication , deletedTodo )
-router.put('/update-todo'  , middleware.authentication , updateTodo)
+router.post('/update-todo'   , updateTodo)
 router.get('/get-all-todos' , middleware.authentication , getAllTodos)
 router.get('/' , (req ,res)=> { 
     return res.json({ 

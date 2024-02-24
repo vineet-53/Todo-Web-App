@@ -68,17 +68,12 @@ exports.deletedTodo = async (req ,res) => {
 exports.updateTodo = async (req ,res) => { 
     // update the todo 
     try {
-        const {todoId} = req.body; 
-        if(!req.user ) { 
-            throw new Error("Unauthorized To do this operation");
-        }
-        const { todo , category , date} = req.body; 
-        if(!todo && !date && !category) { 
-            throw new Error("Please Provide Some Values!")
-        }
+        const { todo , category , date , description , todoId} = req.body; 
+        console.log(req.body)
         if(!todoId) { 
             return res.status(404).json({ 
-                message : "Todo Id not found", 
+                success : false ,
+                message : "Todo ID not found!", 
             })
         }
         // find todo is existed or not
@@ -92,13 +87,15 @@ exports.updateTodo = async (req ,res) => {
                 todo : todo || isTodoExited.todo , 
                 category : category || isTodoExited.category, 
                 date : date || isTodoExited.date, 
+                description:  description || isTodoExited.description
             }, 
         },{new : true}) 
-        
+        const todos  = await Todo.find({})
         return res.status(200).json( {
             success : true, 
             message : "Todo Updated Successfully" , 
             todo : todoDoc,
+            todos,
         })
         
     }catch(err) { 
