@@ -12,6 +12,7 @@ const mongoose = require("./configs/database");
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/v1/", v1Router);
+
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
     message: "Server is Running",
   });
 });
+
 // database
 mongoose.connect().then((res) => console.log("Database Connected"));
 app.listen(PORT, (err) => {

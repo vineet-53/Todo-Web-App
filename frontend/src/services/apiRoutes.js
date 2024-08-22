@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 const BASE_URL = `${process.env.REACT_APP_SECRET_NAME}/api/v1`;
 export const userEndpoints = {
   LOGIN_URL: BASE_URL + "/users/login",
